@@ -2,6 +2,10 @@ import express from "express";
 
 const router = express.Router();
 
+router.get("/", (req, res) => {
+  res.send("VPS API v1 Endpoint is available, try /api/v1/games.");
+});
+
 router.get("/games", (req, res) => {
   const games = req.vpsDb;
   res.send(games);

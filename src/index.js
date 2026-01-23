@@ -41,7 +41,7 @@ app.use(express.json());
 
 let cachedVpsDb = null;
 let lastFetch = 0;
-const CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+const CACHE_TTL = 8 * 60 * 60 * 1000; // 8 hours
 
 async function loadVpsDb() {
   const now = Date.now();
@@ -79,7 +79,7 @@ app.use(
 );
 
 app.get("/api", (req, res) => {
-  res.send("VPS API Service is up and running...");
+  res.send("VPS API Endpoint is available, try /api/v1/games.");
 });
 
 app.get("/", (req, res) => {
