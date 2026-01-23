@@ -1,39 +1,38 @@
-require('dotenv').config()
-const express = require('express');
+import express from "express";
+
 const router = express.Router();
 
-router.get('/', (req, res) => {
-    res.send('VPS Data Service is up and running...');
+router.get("/games", (req, res) => {
+  const games = req.vpsDb;
+  res.send(games);
 });
 
-router.get('/games', async (req, res) => {
-    let games = req.vpsData;
-    res.send(games);
+router.get("/games/:name", (req, res) => {
+  const games = req.vpsDb;
+  const name = req.params.name;
+
+  const regex = new RegExp(`.*${name?.toLowerCase()}.*`, "i");
+  const filtered = games.filter((g) => g.name?.toLowerCase().match(regex));
+
+  res.send(filtered);
 });
 
-router.get('/games/:name', async (req, res) => {
-    let games = req.vpsData;
-    const name = req.params.name;
+router.get("/games/tables/:vpsId", (req, res) => {
+  const games = req.vpsDb;
+  const vpsId = req.params.vpsId;
 
-    const regex = new RegExp(`.*${name?.toLowerCase()}.*`, 'i');
-    games = games.filter(g => g.name?.toLowerCase().match(regex));
+  const filtered = games.filter((g) =>
+    g.tableFiles?.some((t) => t?.id === vpsId),
+  );
 
-    res.send(games);
+  if (filtered.length === 1) {
+    const game = filtered[0];
+    game.table = game.tableFiles?.find((t) => t.id === vpsId);
+    delete game.tableFiles;
+    return res.send(game);
+  }
+
+  res.send(filtered.length === 0 ? {} : filtered);
 });
 
-router.get('/games/tables/:vpsId', async (req, res) => {
-    let games = req.vpsData;
-    const vpsId = req.params.vpsId;
-
-    games = games.filter(g => g.tableFiles?.some(t => t?.id === vpsId));
-
-    if (games.length === 1 ) {
-        games[0].table = games[0].tableFiles?.find(t => t.id === vpsId);
-        delete games[0].tableFiles;
-    }
-
-    res.send(games.length === 0 ? {} : games[0]);
-});
-
-
-module.exports = router;
+export default router;

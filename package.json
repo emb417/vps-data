@@ -1,20 +1,21 @@
-{    
-  "name": "score-bot",
-  "version": "1.0.0",
-  "description": "VPS Data",
+{
+  "name": "vps-data",
+  "version": "3.0.0",
+  "description": "API for Virtual Pinball Spreadsheet Data",
   "main": "index.js",
   "scripts": {
-      "start": "node index.js",
-      "test": "npx ava"
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "pino": "^9.9.4",
+    "pino-http": "^10.5.0",
+    "pino-pretty": "^13.1.3"
   },
   "author": "Eric Faris",
-  "dependencies": {
-    "body-parser": "^1.19.1",
-    "cors": "^2.8.5",
-    "dotenv": "^10.0.0",
-    "express": "^4.17.2",
-    "helmet": "^5.0.1",
-    "morgan": "^1.10.0",
-    "node-fetch": "^2.6.6"
-  }
+  "contributors": [
+    "emb417"
+  ],
+  "license": "MIT"
 }
