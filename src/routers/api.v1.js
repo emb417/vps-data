@@ -25,18 +25,24 @@ router.get("/games/tables/:vpsId", (req, res) => {
   const games = req.vpsDb;
   const vpsId = req.params.vpsId;
 
-  const filtered = games.filter((g) =>
-    g.tableFiles?.some((t) => t?.id === vpsId),
-  );
+  const matches = games
+    .map((game) => {
+      const table = game.tableFiles?.find((t) => t?.id === vpsId);
+      if (!table) return null;
 
-  if (filtered.length === 1) {
-    const game = filtered[0];
-    game.table = game.tableFiles?.find((t) => t.id === vpsId);
-    delete game.tableFiles;
-    return res.send(game);
+      return {
+        ...game,
+        table,
+        tableFiles: undefined,
+      };
+    })
+    .filter(Boolean);
+
+  if (matches.length === 1) {
+    return res.send(matches[0]);
   }
 
-  res.send(filtered.length === 0 ? {} : filtered);
+  return res.send(matches.length === 0 ? {} : matches);
 });
 
 export default router;
