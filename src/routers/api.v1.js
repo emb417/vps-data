@@ -1,48 +1,76 @@
 import express from "express";
+import { getOrRefreshGamesData } from "../utils/cache.js";
+import logger from "../utils/logger.js";
 
 const router = express.Router();
 
 router.get("/", (req, res) => {
-  res.send("VPS API v1 Endpoint is available, try /api/v1/games.");
+  res.send("VPS Data Service is up and running...");
 });
 
-router.get("/games", (req, res) => {
-  const games = req.vpsDb;
-  res.send(games);
-});
-
-router.get("/games/:name", (req, res) => {
-  const games = req.vpsDb;
-  const name = req.params.name;
-
-  const regex = new RegExp(`.*${name?.toLowerCase()}.*`, "i");
-  const filtered = games.filter((g) => g.name?.toLowerCase().match(regex));
-
-  res.send(filtered);
-});
-
-router.get("/games/tables/:vpsId", (req, res) => {
-  const games = req.vpsDb;
-  const vpsId = req.params.vpsId;
-
-  const matches = games
-    .map((game) => {
-      const table = game.tableFiles?.find((t) => t?.id === vpsId);
-      if (!table) return null;
-
-      return {
-        ...game,
-        table,
-        tableFiles: undefined,
-      };
-    })
-    .filter(Boolean);
-
-  if (matches.length === 1) {
-    return res.send(matches[0]);
+router.get("/games", async (req, res) => {
+  try {
+    const gamesData = await getOrRefreshGamesData();
+    res.json(gamesData);
+  } catch (error) {
+    if (
+      error.message ===
+      "Service Unavailable: Could not fetch or load cache data."
+    ) {
+      res.status(503).send("Service Unavailable");
+    } else {
+      logger.error({ err: error }, "Error retrieving games data.");
+      res.status(500).send("Internal Server Error");
+    }
   }
+});
 
-  return res.send(matches.length === 0 ? {} : matches);
+router.get("/games/:name", async (req, res) => {
+  const gameName = req.params.name;
+  try {
+    const gamesData = await getOrRefreshGamesData();
+    const regex = new RegExp(`.*${gameName?.toLowerCase()}.*`, "i");
+    const filtered = gamesData.filter((g) =>
+      g.name?.toLowerCase().match(regex),
+    );
+    res.json(filtered);
+  } catch (error) {
+    if (
+      error.message ===
+      "Service Unavailable: Could not fetch or load cache data."
+    ) {
+      res.status(503).send("Service Unavailable");
+    } else {
+      logger.error(
+        { err: error },
+        `Error retrieving games by name: ${gameName}`,
+      );
+      res.status(500).send("Internal Server Error");
+    }
+  }
+});
+
+router.get("/games/tables/:vpsId", async (req, res) => {
+  const vpsId = req.params.vpsId;
+  try {
+    const gamesData = await getOrRefreshGamesData();
+    const foundGame = gamesData.find(
+      (game) =>
+        game.tableFiles &&
+        game.tableFiles.some((table) => String(table?.id) === vpsId),
+    );
+    res.json(foundGame || {});
+  } catch (error) {
+    if (
+      error.message ===
+      "Service Unavailable: Could not fetch or load cache data."
+    ) {
+      res.status(503).send("Service Unavailable");
+    } else {
+      logger.error({ err: error }, `Error retrieving game by vpsId: ${vpsId}`);
+      res.status(500).send("Internal Server Error");
+    }
+  }
 });
 
 export default router;
