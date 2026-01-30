@@ -1,5 +1,5 @@
 import "dotenv/config";
-import logger from "./logger.js";
+import { logger } from "./logger.js";
 
 /**
  * Fetches data from the external upstream API.

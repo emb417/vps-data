@@ -1,6 +1,6 @@
 import express from "express";
 import { getOrRefreshGamesData } from "../utils/cache.js";
-import logger from "../utils/logger.js";
+import { logger } from "../utils/logger.js";
 
 const router = express.Router();
 

@@ -1,6 +1,7 @@
 import pino from "pino";
+import pinoHttp from "pino-http";
 
-const logger = pino({
+export const logger = pino({
   level: "info",
   transport: {
     target: "pino-pretty",
@@ -12,4 +13,18 @@ const logger = pino({
   },
 });
 
-export default logger;
+export const httpLogger = pinoHttp({
+  logger,
+  customSuccessMessage: (req, res) =>
+    `${res.statusCode} ${req.method} ${req.url}`,
+  customErrorMessage: (req, res, err) =>
+    `${res.statusCode} ${req.method} ${req.url} ${err?.message ?? ""}`,
+  customAttributeKeys: {
+    req: "ignore",
+    res: "ignore",
+    err: "ignore",
+    responseTime: "ignore",
+  },
+  serializers: { ignore: () => undefined },
+  wrapSerializers: false,
+});
