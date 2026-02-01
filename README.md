@@ -11,7 +11,7 @@ Returns a message indicating that the VPS Data Service is up and running.
 - Example Usage
 
 ```bash
-curl https://virtualpinballchat.com:8443/vps/
+curl https://virtualpinballchat.com/vps/
 ```
 
 - Response:
@@ -27,7 +27,7 @@ Returns a list of all games in the VPS data.
 - Example Usage
 
 ```bash
-curl https://virtualpinballchat.com:8443/vps/api/v1/games
+curl https://virtualpinballchat.com/vps/api/v1/games
 ```
 
 - Response:
@@ -53,7 +53,7 @@ Returns a list of games that match the specified name. The name is case-insensit
 - Example Usage
 
 ```bash
-curl https://virtualpinballchat.com:8443/vps/api/v1/games/Game%201
+curl https://virtualpinballchat.com/vps/api/v1/games/Game%201
 ```
 
 - Response:
@@ -74,7 +74,7 @@ Returns a single game that has a table file with the specified VPS ID. If no gam
 - Example Usage
 
 ```bash
-curl https://virtualpinballchat.com:8443/vps/api/v1/games/tables/12345
+curl https://virtualpinballchat.com/vps/api/v1/games/tables/12345
 ```
 
 - Response:

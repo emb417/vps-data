@@ -17,14 +17,14 @@ The VPS Data Service is a Node.js application that provides a REST API for acces
 The API exposes the following endpoints:
 
 - **GET /**: Returns a message indicating the service is running.
-  - Example: `curl https://virtualpinballchat.com:8443/vps/`
+  - Example: `curl https://virtualpinballchat.com/vps/`
   - Response: `"VPS Data Service is up and running..."`
 - **GET /api/v1/games**: Returns a list of all games.
-  - Example: `curl https://virtualpinballchat.com:8443/vps/api/v1/games`
+  - Example: `curl https://virtualpinballchat.com/vps/api/v1/games`
 - **GET /api/v1/games/:name**: Returns games matching the provided name (case-insensitive, partial match).
-  - Example: `curl https://virtualpinballchat.com:8443/vps/api/v1/games/Game%201`
+  - Example: `curl https://virtualpinballchat.com/vps/api/v1/games/Game%201`
 - **GET /api/v1/games/tables/:vpsId**: Returns a game by the VPS ID of its table file.
-  - Example: `curl https://virtualpinballchat.com:8443/vps/api/v1/games/tables/12345`
+  - Example: `curl https://virtualpinballchat.com/vps/api/v1/games/tables/12345`
 
 ## Building and Running
 
