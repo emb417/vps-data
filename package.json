@@ -1,6 +1,6 @@
 {
   "name": "vps-data",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "API for Virtual Pinball Spreadsheet Data",
   "main": "index.js",
   "scripts": {
